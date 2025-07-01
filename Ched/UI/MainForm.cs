@@ -447,7 +447,7 @@ namespace Ched.UI
 
         protected void SetText(string filePath)
         {
-            Text = "Ched" + (string.IsNullOrEmpty(filePath) ? "" : " - " + Path.GetFileName(filePath)) + (OperationManager.IsChanged ? " *" : "");
+            Text = "BEA-ChartEditor (Forked from Ched)" + (string.IsNullOrEmpty(filePath) ? "" : " - " + Path.GetFileName(filePath)) + (OperationManager.IsChanged ? " *" : "");
         }
 
         private void UpdateThumbHeight()
@@ -980,39 +980,9 @@ namespace Ched.UI
             var shortcutItemBuilder = new ToolStripButtonBuilder(ShortcutManager);
 
             var tapButton = shortcutItemBuilder.BuildItem(Commands.SelectTap, "TAP", Resources.TapIcon);
-            var exTapButton = shortcutItemBuilder.BuildItem(Commands.SelectExTap, "ExTAP", Resources.ExTapIcon);
             var holdButton = shortcutItemBuilder.BuildItem(Commands.SelectHold, "HOLD", Resources.HoldIcon);
-            var slideButton = shortcutItemBuilder.BuildItem(Commands.SelectSlide, "SLIDE", Resources.SlideIcon);
-            var slideStepButton = shortcutItemBuilder.BuildItem(Commands.SelectSlideStep, MainFormStrings.SlideStep, Resources.SlideStepIcon);
-            var airActionButton = shortcutItemBuilder.BuildItem(Commands.SelectAirAction, "AIR-ACTION", Resources.AirActionIcon);
-            var flickButton = shortcutItemBuilder.BuildItem(Commands.SelectFlick, "FLICK", Resources.FlickIcon);
+            var flickButton = shortcutItemBuilder.BuildItem(Commands.SelectFlick, "TRACE", Resources.FlickIcon);
             var damageButton = shortcutItemBuilder.BuildItem(Commands.SelectDamage, "DAMAGE", Resources.DamgeIcon);
-
-            var airKind = new CheckableToolStripSplitButton()
-            {
-                DisplayStyle = ToolStripItemDisplayStyle.Image
-            };
-            airKind.Text = "AIR";
-            airKind.Click += (s, e) => noteView.NewNoteType = NoteType.Air;
-            airKind.DropDown.Items.AddRange(new ToolStripItem[]
-            {
-                new ToolStripMenuItem(MainFormStrings.AirUp, Resources.AirUpIcon, (s, e) => noteView.AirDirection = new AirDirection(VerticalAirDirection.Up, HorizontalAirDirection.Center)),
-                new ToolStripMenuItem(MainFormStrings.AirLeftUp, Resources.AirLeftUpIcon, (s, e) => noteView.AirDirection = new AirDirection(VerticalAirDirection.Up, HorizontalAirDirection.Left)),
-                new ToolStripMenuItem(MainFormStrings.AirRightUp, Resources.AirRightUpIcon, (s, e) => noteView.AirDirection = new AirDirection(VerticalAirDirection.Up, HorizontalAirDirection.Right)),
-                new ToolStripMenuItem(MainFormStrings.AirDown, Resources.AirDownIcon, (s, e) => noteView.AirDirection = new AirDirection(VerticalAirDirection.Down, HorizontalAirDirection.Center)),
-                new ToolStripMenuItem(MainFormStrings.AirLeftDown, Resources.AirLeftDownIcon, (s, e) => noteView.AirDirection = new AirDirection(VerticalAirDirection.Down, HorizontalAirDirection.Left)),
-                new ToolStripMenuItem(MainFormStrings.AirRightDown, Resources.AirRightDownIcon, (s, e) => noteView.AirDirection = new AirDirection(VerticalAirDirection.Down, HorizontalAirDirection.Right))
-            });
-            airKind.Image = Resources.AirUpIcon;
-            ShortcutManager.ShortcutUpdated += (s, e) =>
-            {
-                if (ShortcutManager.ResolveShortcutKey(Commands.SelectAir, out Keys key))
-                {
-                    airKind.Text = $"AIR ({key.ToShortcutChar()})";
-                    return;
-                }
-                airKind.Text = "AIR";
-            };
 
             var quantizeTicks = new int[]
             {
@@ -1048,37 +1018,14 @@ namespace Ched.UI
             noteView.NewNoteTypeChanged += (s, e) =>
             {
                 tapButton.Checked = noteView.NewNoteType.HasFlag(NoteType.Tap);
-                exTapButton.Checked = noteView.NewNoteType.HasFlag(NoteType.ExTap);
                 holdButton.Checked = noteView.NewNoteType.HasFlag(NoteType.Hold);
-                slideButton.Checked = noteView.NewNoteType.HasFlag(NoteType.Slide) && !noteView.IsNewSlideStepVisible;
-                slideStepButton.Checked = noteView.NewNoteType.HasFlag(NoteType.Slide) && noteView.IsNewSlideStepVisible;
-                airKind.Checked = noteView.NewNoteType.HasFlag(NoteType.Air);
-                airActionButton.Checked = noteView.NewNoteType.HasFlag(NoteType.AirAction);
                 flickButton.Checked = noteView.NewNoteType.HasFlag(NoteType.Flick);
                 damageButton.Checked = noteView.NewNoteType.HasFlag(NoteType.Damage);
             };
 
-            noteView.AirDirectionChanged += (s, e) =>
-            {
-                switch (noteView.AirDirection.HorizontalDirection)
-                {
-                    case HorizontalAirDirection.Center:
-                        airKind.Image = noteView.AirDirection.VerticalDirection == VerticalAirDirection.Up ? Resources.AirUpIcon : Resources.AirDownIcon;
-                        break;
-
-                    case HorizontalAirDirection.Left:
-                        airKind.Image = noteView.AirDirection.VerticalDirection == VerticalAirDirection.Up ? Resources.AirLeftUpIcon : Resources.AirLeftDownIcon;
-                        break;
-
-                    case HorizontalAirDirection.Right:
-                        airKind.Image = noteView.AirDirection.VerticalDirection == VerticalAirDirection.Up ? Resources.AirRightUpIcon : Resources.AirRightDownIcon;
-                        break;
-                }
-            };
-
             return new ToolStrip(new ToolStripItem[]
             {
-                tapButton, exTapButton, holdButton, slideButton, slideStepButton, airKind, airActionButton, flickButton, damageButton,
+                tapButton, holdButton, flickButton, damageButton,
                 quantizeComboBox
             });
         }

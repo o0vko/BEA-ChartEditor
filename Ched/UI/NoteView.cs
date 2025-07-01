@@ -2496,7 +2496,8 @@ namespace Ched.UI
             ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Serialize,
             PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.Objects,
             TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Auto,
-            ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver() { IgnoreSerializableAttribute = true }
+            ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver() { IgnoreSerializableAttribute = true },
+            MaxDepth = 128
         };
 
         [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
