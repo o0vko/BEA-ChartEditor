@@ -1801,6 +1801,32 @@ namespace Ched.UI
                         pe.Graphics.DrawString(string.Format("x{0: 0.00;-0.00}", item.SpeedRatio), font, highSpeedBrush, point);
                     }
                 }
+
+                // ノーツのティック値描画
+                SizeF strSizeDx = pe.Graphics.MeasureString("0000", font);
+
+                var allNotes = new List<TappableBase>();
+                allNotes.AddRange(Notes.Taps);
+                allNotes.AddRange(Notes.Flicks);
+                allNotes.AddRange(Notes.Damages);
+
+                foreach (var note in allNotes)
+                {
+                    var point = new PointF(-(strSizeDx.Width + strSize.Width), -GetYPositionFromTick(note.Tick) - strSize.Height);
+                    pe.Graphics.DrawString(note.Tick.ToString(), font, Brushes.White, point);
+                }
+
+                foreach (var hold in holds)
+                {
+                    var point = new PointF(-(strSizeDx.Width + strSize.Width), -GetYPositionFromTick(hold.StartTick) - strSize.Height);
+                    pe.Graphics.DrawString(hold.StartTick.ToString(), font, Brushes.White, point);
+
+                    if (hold.Duration > 0)
+                    {
+                        var point2 = new PointF(-(strSizeDx.Width + strSize.Width), -GetYPositionFromTick(hold.StartTick + hold.Duration) - strSize.Height);
+                        pe.Graphics.DrawString((hold.StartTick + hold.Duration).ToString(), font, Brushes.White, point2);
+                    }
+                }
             }
 
             pe.Graphics.Transform = prevMatrix;
