@@ -1803,7 +1803,7 @@ namespace Ched.UI
                 }
 
                 // ノーツのティック値描画
-                SizeF strSizeDx = pe.Graphics.MeasureString("0000", font);
+                SizeF strSizeDx = pe.Graphics.MeasureString("00000000", font);
 
                 var allNotes = new List<TappableBase>();
                 allNotes.AddRange(Notes.Taps);
